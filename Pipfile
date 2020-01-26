@@ -19,6 +19,9 @@ keras = "*"
 tensorflow = "*"
 jupyterlab-git = "*"
 keras-tuner = "*"
+pyarrow = "*"
+azureml-sdk = "*"
+dotnetcore2 = "*"
 
 [requires]
 python_version = "3.7"
