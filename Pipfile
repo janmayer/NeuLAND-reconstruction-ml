@@ -22,6 +22,8 @@ keras-tuner = "*"
 pyarrow = "*"
 azureml-sdk = "*"
 dotnetcore2 = "*"
+rootpy = "*"
+root-numpy = "*"
 
 [requires]
 python_version = "3.7"
