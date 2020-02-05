@@ -24,6 +24,7 @@ azureml-sdk = "*"
 dotnetcore2 = "*"
 rootpy = "*"
 root-numpy = "*"
+psutil = "*"
 
 [requires]
 python_version = "3.7"
