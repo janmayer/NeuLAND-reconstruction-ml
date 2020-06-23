@@ -6,22 +6,18 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-jupyterlab = "*"
 h5py = "*"
 numpy = "*"
 pandas = "*"
 matplotlib = "*"
 seaborn = "*"
 sklearn = "*"
-black = "*"
-jupyterlab-code-formatter = "*"
 keras = "*"
 tensorflow = "*"
-jupyterlab-git = "*"
 keras-tuner = "*"
-pyarrow = "*"
-rootpy = "*"
-root-numpy = "*"
+#pyarrow = "*"
+#rootpy = "*"
+#root-numpy = "*"
 psutil = "*"
 
 [requires]
