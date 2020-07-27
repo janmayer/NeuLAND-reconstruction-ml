@@ -11,7 +11,10 @@ except:
 
 def filename_for(distance, doubleplane, energy, erel, neutron, physics, subrun, what):
     path = pathlib.Path(__file__).parent.absolute().joinpath("data")
-    name = f"{distance}m_{doubleplane}dp_{energy}AMeV_{erel}keV_{neutron}n.{physics}.{subrun:02d}.{what}"
+    if isinstance(subrun, int):
+        name = f"{distance}m_{doubleplane}dp_{energy}AMeV_{erel}keV_{neutron}n.{physics}.{subrun:02d}.{what}"
+    else:
+        name = f"{distance}m_{doubleplane}dp_{energy}AMeV_{erel}keV_{neutron}n.{physics}.{subrun}.{what}"
     return path.joinpath(name)
 
 
