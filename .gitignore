@@ -4,3 +4,4 @@ __pycache__/
 .python-version
 Pipfile.lock
 */models/
+*/kerastuner/
