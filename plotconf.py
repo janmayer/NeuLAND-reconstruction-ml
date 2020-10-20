@@ -9,14 +9,14 @@ mpl.use("pgf")
 # https://matplotlib.org/users/customizing.html
 mpl.rcParams.update({
     "pgf.texsystem": "lualatex",
-    "pgf.preamble": [
+    "pgf.preamble": "\n".join([
         r"\usepackage{fontspec, unicode-math, isotope}",
         r"\setmainfont{Libertinus Serif}",
         r"\setsansfont{Libertinus Sans}",
         r"\setmonofont[Scale=MatchLowercase]{Source Code Pro}",
         r"\setmathfont{Libertinus Math}",
         r"\renewcommand{\familydefault}{\sfdefault}"
-    ],
+    ]),
     "text.usetex": True,
     "font.size": 20,
     "font.family": "sans",
