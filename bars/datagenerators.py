@@ -158,6 +158,7 @@ class DataGeneratorBarsJITScaling(Sequence):
 class DataGeneratorBars(Sequence):
     def __init__(self, config):
         self.c = config
+        
 
         self.cols_tri = ["nHits", "nClus", "Edep"]
         self.cols_e = [str(i) for i in range(0, self.c["doubleplane"] * 100 * 2, 2)]
@@ -174,7 +175,7 @@ class DataGeneratorBars(Sequence):
             self.c["neutrons"][0],
             "inclxx",
             self.c["subruns"][0],
-            "bars.parquet",
+            self.c["suffix"],
         )
         data = pd.read_parquet(file)
         rows = len(data.index)
@@ -210,7 +211,11 @@ class DataGeneratorBars(Sequence):
         a = i * self.c["batch_size"]
         b = (i + 1) * self.c["batch_size"]
 
-        x = self.features[a:b]
+        if self.c["mode"] == "split":
+            # TODO: Refactor maybe? list(zip()) == slow? Slice?
+            x = [self.features[0][a:b], self.features[1][a:b]]
+        else:
+            x = self.features[a:b]
         y = self.labels[a:b]
         return x, y
 
@@ -227,13 +232,13 @@ class DataGeneratorBars(Sequence):
                 n,
                 "inclxx",
                 subrun,
-                "bars-scaled.parquet",
+                self.c["suffix"],
             )
             for n in self.c["neutrons"]
             for subrun in subruns
         ]
         data = pd.concat([pd.read_parquet(file) for file in files], ignore_index=True).sample(frac=1)
-        data.loc[data["nHits"] == 0, self.c["label"]] = 0
+        data.loc[data["nHits"] == 0, ["nPN", "nPP", "nPH"]] = 0
 
         self.current_cache = cacheid
 
@@ -241,6 +246,10 @@ class DataGeneratorBars(Sequence):
             self.features = data[self.cols_e + self.cols_t].to_numpy()
         elif self.c["mode"] == "barstri":
             self.features = data[self.cols_tri + self.cols_e + self.cols_t].to_numpy()
+        elif self.c["mode"] == "split":
+            self.features = [data[self.cols_tri].to_numpy(), data[self.cols_e + self.cols_t].to_numpy()]
+        elif self.c["mode"] == "tri":
+            self.features = data[self.cols_tri].to_numpy()
         else:
             raise
 
