@@ -1,17 +1,18 @@
 import os
 import sys
 import subprocess
-import ROOT
 
 sys.path.append("..")
 from helpers import filename_for
 
 
 def reconstruct_impl(distance, doubleplane, energy, erel, neutron, physics, subrun, overwrite=True):
+    import ROOT
+    
     inpfile = filename_for(distance, doubleplane, energy, erel, neutron, physics, subrun, "digi.root")
     simfile = filename_for(distance, doubleplane, energy, erel, neutron, physics, subrun, "simu.root")
     parfile = filename_for(distance, doubleplane, energy, erel, neutron, physics, subrun, "para.root")
-    outfile = filename_for(distance, doubleplane, energy, erel, neutron, physics, subrun, "recotest.root")
+    outfile = filename_for(distance, doubleplane, energy, erel, neutron, physics, subrun, "recotest3.root")
 
     if not os.path.isfile(inpfile):
         print(f"Input {inpfile} does not exist")
@@ -52,42 +53,57 @@ def reconstruct_impl(distance, doubleplane, energy, erel, neutron, physics, subr
     run.AddTask(ROOT.R3BNeulandNeutronReconstructionMon("NeulandNeutronsCheat", "NeulandNeutronReconstructionMonCheat"))
 
     
-    # RValue
-    run.AddTask(
-        ROOT.R3BNeulandNeutronsRValue(energy, "NeulandMultiplicityCheat", "NeulandClusters", "NeulandNeutronsRValue")
-    )
-    run.AddTask(
-        ROOT.R3BNeulandNeutronReconstructionMon("NeulandNeutronsRValue", "NeulandNeutronReconstructionMonRValue")
-    )
+#     # RValue
+#     run.AddTask(
+#         ROOT.R3BNeulandNeutronsRValue(energy, "NeulandMultiplicityCheat", "NeulandClusters", "NeulandNeutronsRValue")
+#     )
+#     run.AddTask(
+#         ROOT.R3BNeulandNeutronReconstructionMon("NeulandNeutronsRValue", "NeulandNeutronReconstructionMonRValue")
+#     )
+
+
+#     # Only one R3BNeulandNeutronsScikit at a time!
+#     # Scikit
+#     run.AddTask(
+#         ROOT.R3BNeulandNeutronsScikit(
+#             "models/15m_30dp_600AMeV_500keV_4n_AdaBoostClassifier.pkl",  # "models/15m_30dp_600AMeV_500keV_4n_RandomForestClassifier.pkl",
+#             "NeulandMultiplicityCheat",
+#             "NeulandClusters",
+#             "NeulandNeutronsScikit",
+#         )
+#     )
+#     run.AddTask(
+#         ROOT.R3BNeulandNeutronReconstructionMon("NeulandNeutronsScikit", "NeulandNeutronReconstructionMonAdaBoost")
+#     )
 
     
-    # Scikit
+    # Auto-Sklearn
     run.AddTask(
         ROOT.R3BNeulandNeutronsScikit(
-            "models/15m_30dp_600AMeV_500keV_4n_AdaBoostClassifier.pkl",  # "models/15m_30dp_600AMeV_500keV_4n_RandomForestClassifier.pkl",
+            "models/autosklearn.pkl",
             "NeulandMultiplicityCheat",
             "NeulandClusters",
-            "NeulandNeutronsScikit",
+            "NeulandNeutronsAutoSklearn",
         )
     )
     run.AddTask(
-        ROOT.R3BNeulandNeutronReconstructionMon("NeulandNeutronsScikit", "NeulandNeutronReconstructionMonScikit")
+        ROOT.R3BNeulandNeutronReconstructionMon("NeulandNeutronsAutoSklearn", "NeulandNeutronReconstructionMonAutoSklearn")
     )
-
     
-    # Keras
-    run.AddTask(
-        ROOT.R3BNeulandNeutronsKeras(
-            "models/keras-100-SM",
-            "models/keras-scaler.pkl.gz",
-            "NeulandMultiplicityCheat",
-            "NeulandClusters",
-            "NeulandNeutronsKeras",
-        )
-    )
-    run.AddTask(
-        ROOT.R3BNeulandNeutronReconstructionMon("NeulandNeutronsKeras", "NeulandNeutronReconstructionMonKeras")
-    )
+    
+#     # Keras
+#     run.AddTask(
+#         ROOT.R3BNeulandNeutronsKeras(
+#             "models/keras-100-SM",
+#             "models/keras-scaler.pkl.gz",
+#             "NeulandMultiplicityCheat",
+#             "NeulandClusters",
+#             "NeulandNeutronsKeras",
+#         )
+#     )
+#     run.AddTask(
+#         ROOT.R3BNeulandNeutronReconstructionMon("NeulandNeutronsKeras", "NeulandNeutronReconstructionMonKeras")
+#     )
     
     
     run.Init()
