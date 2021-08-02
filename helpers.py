@@ -63,7 +63,7 @@ def tridata(distance, doubleplane, energy, erel, nmax, physics):
 
     # Normalize: If there are no hits, there isn't anything to reconstruct.
     # Can happen if the neutrons just fly through the detector
-    data.loc[data["nHits"] == 0, ["nPN", "nPP", "nPH"]] = 0
+    data.loc[data["nHits"] == 0, ["nPP", "nPH"]] = 0
 
     # Split into Train and Test dataset.
     # Ensure presence of one zero-case in both sets
